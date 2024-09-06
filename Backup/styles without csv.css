@@ -1,0 +1,223 @@
+:root {
+    /* Light mode colors */
+    --bg-color: #f0f0f0;
+    --card-bg: #ffffff;
+    --text-color: #333333;
+    --button-bg: #007bff;
+    --button-text: #ffffff;
+    --button-hover: #0056b3;
+    --input-bg: #ffffff;
+    --input-border: #cccccc;
+    --toggle-bg: #cccccc;
+    --toggle-dot: #ffffff;
+
+    /* Dark mode colors */
+    --dark-bg-color: #1a1a1a;
+    --dark-card-bg: #2c2c2c;
+    --dark-text-color: #ffffff;
+    --dark-button-bg: #0056b3;
+    --dark-button-hover: #003d82;
+    --dark-input-bg: #3a3a3a;
+    --dark-input-border: #555555;
+    --dark-toggle-bg: #555555;
+    --dark-toggle-dot: #ffffff;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+body.dark-mode {
+    background-color: var(--dark-bg-color);
+    color: var(--dark-text-color);
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.card {
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    transition: background-color 0.3s;
+}
+
+body.dark-mode .card {
+    background-color: var(--dark-card-bg);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid var(--input-border);
+}
+
+body.dark-mode .card-header {
+    border-bottom-color: var(--dark-input-border);
+}
+
+.card-header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.card-content {
+    padding: 20px;
+}
+
+.card-footer {
+    padding: 20px;
+    border-top: 1px solid var(--input-border);
+}
+
+body.dark-mode .card-footer {
+    border-top-color: var(--dark-input-border);
+}
+
+.input-group {
+    display: flex;
+    margin-top: 20px;
+}
+
+input[type="text"] {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid var(--input-border);
+    border-radius: 4px;
+    font-size: 1rem;
+    background-color: var(--input-bg);
+    color: var(--text-color);
+}
+
+body.dark-mode input[type="text"] {
+    background-color: var(--dark-input-bg);
+    border-color: var(--dark-input-border);
+    color: var(--dark-text-color);
+}
+
+button {
+    padding: 10px 20px;
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: var(--button-hover);
+}
+
+body.dark-mode button {
+    background-color: var(--dark-button-bg);
+}
+
+body.dark-mode button:hover {
+    background-color: var(--dark-button-hover);
+}
+
+#savePrompt {
+    margin-left: 10px;
+}
+
+#importCSV {
+    width: 100%;
+}
+
+.prompt-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.delete-prompt {
+    background-color: transparent;
+    color: var(--button-bg);
+    padding: 5px 10px;
+}
+
+.delete-prompt:hover {
+    background-color: rgba(0, 123, 255, 0.1);
+}
+
+body.dark-mode .delete-prompt {
+    color: var(--dark-button-bg);
+}
+
+body.dark-mode .delete-prompt:hover {
+    background-color: rgba(0, 86, 179, 0.1);
+}
+
+/* Dark mode toggle */
+.dark-mode-toggle {
+    position: relative;
+    width: 60px;
+    height: 30px;
+}
+
+.toggle-input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-label {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--toggle-bg);
+    transition: .4s;
+    border-radius: 34px;
+}
+
+body.dark-mode .toggle-label {
+    background-color: var(--dark-toggle-bg);
+}
+
+.toggle-label:before {
+    position: absolute;
+    content: "";
+    height: 22px;
+    width: 22px;
+    left: 4px;
+    bottom: 4px;
+    background-color: var(--toggle-dot);
+    transition: .4s;
+    border-radius: 50%;
+}
+
+body.dark-mode .toggle-label:before {
+    background-color: var(--dark-toggle-dot);
+}
+
+.toggle-input:checked + .toggle-label {
+    background-color: var(--button-bg);
+}
+
+body.dark-mode .toggle-input:checked + .toggle-label {
+    background-color: var(--dark-button-bg);
+}
+
+.toggle-input:checked + .toggle-label:before {
+    transform: translateX(30px);
+}

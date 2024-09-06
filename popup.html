@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Prompt Manager</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>AI Prompt Manager</h1>
+            <div class="dark-mode-toggle">
+                <input type="checkbox" id="darkModeToggle" class="toggle-checkbox">
+                <label for="darkModeToggle" class="toggle-label">
+                    <span class="toggle-inner"></span>
+                    <span class="toggle-switch"></span>
+                </label>
+            </div>
+        </header>
+
+        <main>
+            <p id="promptCount" class="prompt-count"></p>
+            
+            <div id="promptList" class="prompt-list"></div>
+            
+            <div class="button-container">
+                <button id="addPromptButton" class="btn btn-primary">Add a prompt</button>
+                <button id="addSelectedPrompts" class="btn btn-secondary" disabled>Add Selected Prompts</button>
+            </div>
+        </main>
+
+        <footer>
+            <p>AI Prompt Manager v1.2</p>
+        </footer>
+    </div>
+
+    <div id="addEditPromptModal" class="modal">
+        <div class="modal-content">
+            <h2 id="modalTitle">Add New Prompt</h2>
+            <input type="text" id="promptTitle" placeholder="Enter prompt title" required>
+            <textarea id="promptText" placeholder="Enter prompt text" required></textarea>
+            <div class="modal-buttons">
+                <button id="savePromptButton" class="btn btn-primary">Save</button>
+                <button id="cancelButton" class="btn btn-secondary">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="notificationContainer" class="notification-container"></div>
+
+    <script src="popup.js"></script>
+</body>
+</html>

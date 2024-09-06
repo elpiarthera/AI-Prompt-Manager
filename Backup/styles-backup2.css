@@ -1,0 +1,280 @@
+:root {
+    /* Light mode colors */
+    --bg-color: #f0f0f0;
+    --card-bg: #ffffff;
+    --text-color: #333333;
+    --button-bg: #007bff;
+    --button-text: #ffffff;
+    --button-hover: #0056b3;
+    --input-bg: #ffffff;
+    --input-border: #cccccc;
+    --toggle-bg: #cccccc;
+    --toggle-dot: #ffffff;
+
+    /* Dark mode colors */
+    --dark-bg-color: #1a1a1a;
+    --dark-card-bg: #2c2c2c;
+    --dark-text-color: #ffffff;
+    --dark-button-bg: #0056b3;
+    --dark-button-hover: #003d82;
+    --dark-input-bg: #3a3a3a;
+    --dark-input-border: #555555;
+    --dark-toggle-bg: #555555;
+    --dark-toggle-dot: #ffffff;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 20px;
+    transition: background-color 0.3s, color 0.3s;
+    width: 350px;
+}
+
+body.dark-mode {
+    background-color: var(--dark-bg-color);
+    color: var(--dark-text-color);
+}
+
+.card {
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s;
+}
+
+body.dark-mode .card {
+    background-color: var(--dark-card-bg);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid var(--input-border);
+}
+
+body.dark-mode .card-header {
+    border-bottom-color: var(--dark-input-border);
+}
+
+.card-header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.card-content {
+    padding: 20px;
+}
+
+input[type="text"], textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid var(--input-border);
+    border-radius: 4px;
+    font-size: 1rem;
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    box-sizing: border-box;
+}
+
+body.dark-mode input[type="text"], body.dark-mode textarea {
+    background-color: var(--dark-input-bg);
+    border-color: var(--dark-input-border);
+    color: var(--dark-text-color);
+}
+
+textarea {
+    height: 150px;
+    resize: vertical;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: var(--button-hover);
+}
+
+body.dark-mode button {
+    background-color: var(--dark-button-bg);
+}
+
+body.dark-mode button:hover {
+    background-color: var(--dark-button-hover);
+}
+
+#addPromptButton {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.prompt-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: var(--input-bg);
+    border-radius: 4px;
+}
+
+body.dark-mode .prompt-item {
+    background-color: var(--dark-input-bg);
+}
+
+.prompt-item span {
+    flex-grow: 1;
+    margin-right: 10px;
+}
+
+.prompt-item button {
+    padding: 5px 10px;
+    font-size: 0.9rem;
+    margin-left: 5px;
+}
+
+/* Dark mode toggle */
+.dark-mode-toggle {
+    position: relative;
+    width: 60px;
+    height: 30px;
+}
+
+#darkModeToggle {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.dark-mode-toggle label {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--toggle-bg);
+    transition: .4s;
+    border-radius: 34px;
+}
+
+body.dark-mode .dark-mode-toggle label {
+    background-color: var(--dark-toggle-bg);
+}
+
+.dark-mode-toggle label:before {
+    position: absolute;
+    content: "";
+    height: 22px;
+    width: 22px;
+    left: 4px;
+    bottom: 4px;
+    background-color: var(--toggle-dot);
+    transition: .4s;
+    border-radius: 50%;
+}
+
+#darkModeToggle:checked + label {
+    background-color: var(--button-bg);
+}
+
+body.dark-mode #darkModeToggle:checked + label {
+    background-color: var(--dark-button-bg);
+}
+
+#darkModeToggle:checked + label:before {
+    transform: translateX(30px);
+}
+
+/* New styles for settings and manage prompts screens */
+.header-controls {
+    display: flex;
+    align-items: center;
+}
+
+.icon-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    margin-left: 10px;
+}
+
+.icon-button svg {
+    fill: var(--text-color);
+}
+
+body.dark-mode .icon-button svg {
+    fill: var(--dark-text-color);
+}
+
+#settingsScreen, #managePromptsScreen, #addEditScreen {
+    padding: 20px;
+}
+
+#settingsScreen button, #managePromptsScreen button {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.manage-prompt-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: var(--input-bg);
+    border-radius: 4px;
+}
+
+body.dark-mode .manage-prompt-item {
+    background-color: var(--dark-input-bg);
+}
+
+.manage-prompt-item span {
+    flex-grow: 1;
+    margin-right: 10px;
+}
+
+.manage-prompt-item button {
+    padding: 5px 10px;
+    font-size: 0.9rem;
+    margin-left: 5px;
+}
+
+h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+#promptCount {
+    margin-bottom: 15px;
+}
+.prompt-checkbox {
+    margin-right: 10px;
+}
+
+#addSelectedPrompts {
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#addSelectedPrompts:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
