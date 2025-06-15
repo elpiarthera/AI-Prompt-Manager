@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Prompt Manager - Options</title>
+    <link rel="stylesheet" href="styles_options.css">
+</head>
+<body>
+    <div class="container">
+        <h1>AI Prompt Manager - Options</h1>
+
+        <div id="statusArea" class="status-message"></div>
+
+        <h2>ChatGPT Selectors</h2>
+        <div class="options-section">
+            <div class="form-group">
+                <label for="chatgpt_input_selector">Input Field:</label>
+                <input type="text" id="chatgpt_input_selector" name="chatgpt_input_selector">
+            </div>
+            <div class="form-group">
+                <label for="chatgpt_submit_selector">Submit Button:</label>
+                <input type="text" id="chatgpt_submit_selector" name="chatgpt_submit_selector">
+            </div>
+            <div class="form-group">
+                <label for="chatgpt_conversation_container_selector">Conversation Container:</label>
+                <input type="text" id="chatgpt_conversation_container_selector" name="chatgpt_conversation_container_selector">
+            </div>
+            <div class="form-group">
+                <label for="chatgpt_message_selector">Message Element:</label>
+                <input type="text" id="chatgpt_message_selector" name="chatgpt_message_selector">
+            </div>
+            <div class="form-group">
+                <label for="chatgpt_role_selector">Role Element (within message):</label>
+                <input type="text" id="chatgpt_role_selector" name="chatgpt_role_selector">
+            </div>
+            <div class="form-group">
+                <label for="chatgpt_content_selector">Content Element (within message):</label>
+                <input type="text" id="chatgpt_content_selector" name="chatgpt_content_selector">
+            </div>
+        </div>
+
+        <h2>Claude.ai Selectors</h2>
+        <div class="options-section">
+            <div class="form-group">
+                <label for="claude_input_selector">Input Field:</label>
+                <input type="text" id="claude_input_selector" name="claude_input_selector">
+            </div>
+            <!-- Add more Claude selectors here if needed in the future -->
+        </div>
+
+        <h2>Claude API Settings</h2>
+        <div class="options-section">
+            <div class="form-group">
+                <label for="claude_api_key">Claude API Key:</label>
+                <input type="password" id="claude_api_key" name="claude_api_key" style="width: 400px;">
+                <small style="font-size: 0.9em; color: #666;">Your API key is stored locally on this device and is not synced across browsers.</small>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button id="saveButton" class="btn btn-primary">Save Settings</button>
+            <button id="resetButton" class="btn btn-secondary">Reset to Defaults</button>
+        </div>
+    </div>
+    <script src="options.js"></script>
+</body>
+</html>

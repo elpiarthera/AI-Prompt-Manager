@@ -143,47 +143,75 @@ h1 {
 
 .modal-content {
     background-color: var(--background-color);
-    margin: 15% auto;
+    margin: 15% auto; /* Adjust margin for better centering if needed */
     padding: 20px;
     border-radius: 5px;
     width: 80%;
+    max-width: 330px; /* Constrain modal width, similar to popup body */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Add some shadow for depth */
 }
 
 .modal h2 {
     margin-top: 0;
+    font-size: 18px; /* Adjust title size */
+    margin-bottom: 15px;
 }
 
-.modal input,
+.modal label { /* Style for labels inside modal */
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500; /* Slightly bolder labels */
+    font-size: 14px;
+}
+
+.modal input[type="text"],
 .modal textarea {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
+    width: calc(100% - 20px); /* Full width minus padding */
+    padding: 10px; /* Increase padding for better touch/click */
+    margin-bottom: 15px; /* Increase spacing */
     border: 1px solid var(--border-color);
     border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+.modal textarea {
+    min-height: 100px; /* Larger text area */
+    resize: vertical;
 }
 
 .modal-buttons {
     display: flex;
     justify-content: flex-end;
+    gap: 10px; /* Add space between buttons */
 }
 
 .modal-buttons button {
-    margin-left: 10px;
+    /* margin-left is removed due to gap, specific styling can be done with .btn classes */
 }
 
-.notification-container {
+/* Notification Area - if you create a specific container */
+#notificationArea {
     position: fixed;
-    bottom: 20px;
-    left: 20px;
-    right: 20px;
+    top: 10px;
+    right: 10px;
+    width: auto;
+    max-width: calc(100% - 20px); /* Max width of popup minus some padding */
+    z-index: 1005; /* Above modal backdrop */
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Space between multiple notifications */
 }
 
 .notification {
-    padding: 10px;
-    margin-bottom: 10px;
+    padding: 10px 15px;
     border-radius: 4px;
     color: white;
     font-size: 14px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    opacity: 1;
+    transition: opacity 0.5s ease-in-out; /* For fade out */
+    /* margin-bottom is removed due to gap in #notificationArea */
 }
 
 .notification.success {
@@ -192,10 +220,23 @@ h1 {
 
 .notification.warning {
     background-color: var(--warning-color);
+    color: #333; /* Darker text for yellow background for better contrast */
 }
 
 .notification.error {
     background-color: var(--error-color);
+}
+
+/* Small button style for edit/delete inside prompt items */
+.btn-small {
+    padding: 4px 8px;
+    font-size: 12px;
+    margin-left: 5px; /* Keep margin for inline buttons */
+}
+
+.btn-danger { /* For delete button in prompt item */
+    background-color: var(--error-color);
+    color: white;
 }
 
 footer {
