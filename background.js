@@ -34,13 +34,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     });
     sendResponse({ success: true });
   } else if (message.action === 'sendToClaudeAPI') {
-    chrome.storage.sync.get('claudeApiKey', (data) => {
+    chrome.storage.local.get('claudeApiKey', (data) => {
       if (!data.claudeApiKey || data.claudeApiKey.trim() === '') {
         sendResponse({ error: 'Claude API key not set. Please set it in the extension options.' });
         return; // Must return here as sendResponse was called.
       }
 
-      const apiKey = data.claudeApiKey;
+      const apiKey = data.claudeApiKey; // API key is now from local storage
       const apiUrl = 'https://api.anthropic.com/v1/messages';
       const model = "claude-3-haiku-20240307"; // Or a different model if preferred
 

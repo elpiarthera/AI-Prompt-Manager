@@ -13,19 +13,43 @@ const DEFAULT_CHATGPT_SELECTORS = {
 };
 let CHATGPT_SELECTORS = { ...DEFAULT_CHATGPT_SELECTORS }; // Initialize with defaults
 
+// Helper function to validate CSS selectors
+function isValidSelector(selector) {
+    if (typeof selector !== 'string' || selector.trim() === '') {
+        return false;
+    }
+    try {
+        document.createDocumentFragment().querySelector(selector);
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
+
 // Function to load selectors from storage
 function loadSelectors() {
     return new Promise((resolve) => {
+        // Ensure CHATGPT_SELECTORS is reset to defaults before loading user-defined ones
+        // This is important if loadSelectors could be called multiple times, though currently it's only on init.
+        CHATGPT_SELECTORS = { ...DEFAULT_CHATGPT_SELECTORS };
+
         chrome.storage.sync.get('userSelectors', (data) => {
             if (data.userSelectors && data.userSelectors.chatGPT) {
-                console.log("AI Prompt Manager: Loading user-defined ChatGPT selectors.");
-                for (const key in CHATGPT_SELECTORS) {
-                    if (data.userSelectors.chatGPT[key] && String(data.userSelectors.chatGPT[key]).trim() !== '') {
-                        CHATGPT_SELECTORS[key] = data.userSelectors.chatGPT[key];
+                console.log("AI Prompt Manager: Attempting to load user-defined ChatGPT selectors.");
+                for (const key in DEFAULT_CHATGPT_SELECTORS) { // Iterate over known default keys
+                    const userDefinedSelector = data.userSelectors.chatGPT[key];
+                    if (userDefinedSelector && String(userDefinedSelector).trim() !== '') {
+                        if (isValidSelector(userDefinedSelector)) {
+                            CHATGPT_SELECTORS[key] = userDefinedSelector;
+                        } else {
+                            console.warn(`AI Prompt Manager: Invalid user-defined selector for ChatGPT's "${key}": "${userDefinedSelector}". Using default: "${DEFAULT_CHATGPT_SELECTORS[key]}"`);
+                            // CHATGPT_SELECTORS[key] remains the default because we started with a fresh copy.
+                        }
                     }
+                    // If userDefinedSelector is empty or not set, the default from the initial spread is used.
                 }
             } else {
-                console.log("AI Prompt Manager: Using default ChatGPT selectors.");
+                console.log("AI Prompt Manager: No user-defined ChatGPT selectors found. Using defaults.");
             }
             console.log("AI Prompt Manager: Effective ChatGPT Selectors:", CHATGPT_SELECTORS);
             resolve();

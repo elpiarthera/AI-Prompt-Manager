@@ -39,63 +39,71 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     function loadOptions() {
-        chrome.storage.sync.get(['userSelectors', 'claudeApiKey'], (data) => {
-            const loadedSelectors = data.userSelectors || {};
-            const loadedApiKey = data.claudeApiKey || '';
+        // Load selectors from sync storage
+        chrome.storage.sync.get('userSelectors', (syncData) => {
+            const loadedSelectors = syncData.userSelectors || {};
 
-            // Populate ChatGPT fields
             for (const key in defaultSelectors.chatGPT) {
                 if (inputs.chatGPT[key]) {
                     inputs.chatGPT[key].value = (loadedSelectors.chatGPT && loadedSelectors.chatGPT[key]) ?
                                                 loadedSelectors.chatGPT[key] : defaultSelectors.chatGPT[key];
                 }
             }
-
-            // Populate Claude fields
             for (const key in defaultSelectors.claude) {
                  if (inputs.claude[key]) {
                     inputs.claude[key].value = (loadedSelectors.claude && loadedSelectors.claude[key]) ?
                                                loadedSelectors.claude[key] : defaultSelectors.claude[key];
                 }
             }
-
-            // Populate Claude API Key
-            if (inputs.claudeApiKey) {
-                inputs.claudeApiKey.value = loadedApiKey;
-            }
-
-            displayStatus("Options loaded.", "info");
         });
+
+        // Load API key from local storage
+        chrome.storage.local.get('claudeApiKey', (localData) => {
+            if (inputs.claudeApiKey) {
+                inputs.claudeApiKey.value = localData.claudeApiKey || '';
+            }
+        });
+        // Note: displayStatus might show "Options loaded" before both async calls complete.
+        // For a more robust solution, use Promises or await if in an async function.
+        // For this scope, we'll accept it. A single displayStatus after a Promise.all would be ideal.
+        displayStatus("Options loading initiated.", "info");
     }
 
     function saveOptions() {
-        const userSelectorsToSave = {
-            chatGPT: {},
-            claude: {}
-        };
+        let saveError = null;
+        let selectorsSaved = false;
+        let apiKeySaved = false;
 
-        for (const key in inputs.chatGPT) {
-            if (inputs.chatGPT[key]) {
-                userSelectorsToSave.chatGPT[key] = inputs.chatGPT[key].value.trim();
+        function checkCompletionAndNotify() {
+            if (selectorsSaved && apiKeySaved) {
+                if (saveError) {
+                    displayStatus(`Error saving settings: ${saveError}`, "error");
+                } else {
+                    displayStatus("Settings saved successfully!", "success");
+                }
             }
+        }
+
+        // Save Selectors to sync
+        const userSelectorsToSave = { chatGPT: {}, claude: {} };
+        for (const key in inputs.chatGPT) {
+            if (inputs.chatGPT[key]) userSelectorsToSave.chatGPT[key] = inputs.chatGPT[key].value.trim();
         }
         for (const key in inputs.claude) {
-            if (inputs.claude[key]) {
-                userSelectorsToSave.claude[key] = inputs.claude[key].value.trim();
-            }
+            if (inputs.claude[key]) userSelectorsToSave.claude[key] = inputs.claude[key].value.trim();
         }
+        chrome.storage.sync.set({ userSelectors: userSelectorsToSave }, () => {
+            if (chrome.runtime.lastError) saveError = chrome.runtime.lastError.message;
+            selectorsSaved = true;
+            checkCompletionAndNotify();
+        });
 
-        const claudeApiKeyToSave = inputs.claudeApiKey ? inputs.claudeApiKey.value : ''; // Do not trim API key
-
-        chrome.storage.sync.set({
-            userSelectors: userSelectorsToSave,
-            claudeApiKey: claudeApiKeyToSave
-        }, () => {
-            if (chrome.runtime.lastError) {
-                displayStatus(`Error saving settings: ${chrome.runtime.lastError.message}`, "error");
-            } else {
-                displayStatus("Settings saved successfully!", "success");
-            }
+        // Save API Key to local
+        const claudeApiKeyToSave = inputs.claudeApiKey ? inputs.claudeApiKey.value : '';
+        chrome.storage.local.set({ claudeApiKey: claudeApiKeyToSave }, () => {
+            if (chrome.runtime.lastError && !saveError) saveError = chrome.runtime.lastError.message; // Prioritize first error
+            apiKeySaved = true;
+            checkCompletionAndNotify();
         });
     }
 

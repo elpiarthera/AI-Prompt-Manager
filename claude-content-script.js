@@ -2,19 +2,43 @@
 
 console.log("AI Prompt Manager: Claude content script loaded");
 
-let CLAUDE_INPUT_SELECTOR = 'div.ProseMirror[contenteditable="true"]'; // Default
+const DEFAULT_CLAUDE_INPUT_SELECTOR = 'div.ProseMirror[contenteditable="true"]';
+let CLAUDE_INPUT_SELECTOR = DEFAULT_CLAUDE_INPUT_SELECTOR; // Initialize with default
+
+// Helper function to validate CSS selectors
+function isValidSelector(selector) {
+    if (typeof selector !== 'string' || selector.trim() === '') {
+        return false;
+    }
+    try {
+        document.createDocumentFragment().querySelector(selector);
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
 
 // Function to load selectors from storage for Claude
 function loadClaudeSelectors() {
     return new Promise((resolve) => {
+        // Reset to default before loading, in case this function is called multiple times (though currently not)
+        CLAUDE_INPUT_SELECTOR = DEFAULT_CLAUDE_INPUT_SELECTOR;
+
         chrome.storage.sync.get('userSelectors', (data) => {
-            if (data.userSelectors && data.userSelectors.claude &&
-                data.userSelectors.claude.inputField && String(data.userSelectors.claude.inputField).trim() !== '') {
-                CLAUDE_INPUT_SELECTOR = data.userSelectors.claude.inputField;
-                console.log('AI Prompt Manager: Loaded user-defined Claude input selector:', CLAUDE_INPUT_SELECTOR);
+            const userClaudeInputField = data.userSelectors?.claude?.inputField;
+
+            if (userClaudeInputField && String(userClaudeInputField).trim() !== '') {
+                if (isValidSelector(userClaudeInputField)) {
+                    CLAUDE_INPUT_SELECTOR = userClaudeInputField;
+                    console.log('AI Prompt Manager: Loaded user-defined Claude input selector:', CLAUDE_INPUT_SELECTOR);
+                } else {
+                    console.warn(`AI Prompt Manager: Invalid user-defined Claude input selector: "${userClaudeInputField}". Using default: "${DEFAULT_CLAUDE_INPUT_SELECTOR}"`);
+                    // CLAUDE_INPUT_SELECTOR remains the default
+                }
             } else {
-                console.log('AI Prompt Manager: Using default Claude input selector.');
+                console.log('AI Prompt Manager: No user-defined Claude input selector found. Using default.');
             }
+            console.log("AI Prompt Manager: Effective Claude Input Selector:", CLAUDE_INPUT_SELECTOR);
             resolve();
         });
     });

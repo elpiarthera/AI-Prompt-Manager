@@ -36,25 +36,60 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Update prompt list
     function updatePromptList() {
-        promptList.innerHTML = '';
-        prompts.forEach((prompt, index) => {
-            const promptItem = document.createElement('div');
-            promptItem.className = 'prompt-item';
-            promptItem.innerHTML = `
-                <input type="checkbox" id="prompt-${index}" data-index="${index}" ${selectedPrompts.has(index) ? 'checked' : ''}>
-                <label for="prompt-${index}">${prompt.title}</label>
-                <button class="edit-button btn-secondary btn-small" data-index="${index}">Edit</button>
-                <button class="delete-button btn-danger btn-small" data-index="${index}">Delete</button>
-            `;
-            promptList.appendChild(promptItem);
-        });
+        promptList.innerHTML = ''; // Clear existing items
+
+        if (!prompts || prompts.length === 0) {
+            const emptyMessage = document.createElement('p');
+            emptyMessage.textContent = 'No prompts saved yet. Click "Add a prompt" to get started!';
+            emptyMessage.style.textAlign = 'center';
+            emptyMessage.style.color = 'var(--secondary-color)'; // Use CSS variable if available
+            promptList.appendChild(emptyMessage);
+        } else {
+            prompts.forEach((prompt, index) => {
+                const promptItem = document.createElement('div');
+                promptItem.className = 'prompt-item';
+
+                // Checkbox
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.id = `prompt-${index}`;
+                checkbox.dataset.index = index;
+                checkbox.checked = selectedPrompts.has(index);
+                promptItem.appendChild(checkbox);
+
+                // Label
+                const label = document.createElement('label');
+                label.htmlFor = `prompt-${index}`;
+                label.textContent = prompt.title; // Safely sets text content
+                promptItem.appendChild(label);
+
+                // Edit Button
+                const editButton = document.createElement('button');
+                editButton.textContent = 'Edit';
+                editButton.classList.add('edit-button', 'btn-secondary', 'btn-small');
+                editButton.dataset.index = index;
+                promptItem.appendChild(editButton);
+
+                // Delete Button
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Delete';
+                deleteButton.classList.add('delete-button', 'btn-danger', 'btn-small');
+                deleteButton.dataset.index = index;
+                promptItem.appendChild(deleteButton);
+
+                promptList.appendChild(promptItem);
+            });
+        }
+
         updatePromptCount();
-        // Ensure checkboxes reflect the current selectedPrompts state after re-rendering
-        promptList.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-            const idx = parseInt(checkbox.dataset.index);
-            checkbox.checked = selectedPrompts.has(idx);
-        });
-        updateAddSelectedPromptsButton(); // Call it after ensuring checkboxes are correct
+        // The checkbox state is set during creation, so direct re-querying might not be needed
+        // unless other operations modify checkboxes outside this function.
+        // If issues arise, the explicit check can be re-added:
+        // promptList.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+        //     const idx = parseInt(cb.dataset.index);
+        //     cb.checked = selectedPrompts.has(idx);
+        // });
+        updateAddSelectedPromptsButton();
     }
 
     // Modal display functions
@@ -164,33 +199,45 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         } else if (e.target.classList.contains('delete-button')) {
             const index = parseInt(e.target.dataset.index);
-            if (confirm("Are you sure you want to delete this prompt?")) { // Delete confirmation still uses confirm
-                const oldSelectedPrompts = new Set(selectedPrompts); // Clone for potential revert
+            if (confirm("Are you sure you want to delete this prompt?")) {
+                const promptToDelete = prompts[index]; // Store the prompt before deleting
+                const oldSelectedPrompts = new Set(selectedPrompts); // Capture current selection state
+
+                // Optimistically remove from local array first
                 prompts.splice(index, 1);
 
-                // Adjust selectedPrompts after deletion
-                const newSelectedPrompts = new Set();
+                // Adjust selectedPrompts immediately after local splice
+                // This logic correctly handles shifting indices for items selected after the deleted one.
+                const newSelectedPromptsAfterOptimisticDelete = new Set();
                 oldSelectedPrompts.forEach(selectedIndex => {
                     if (selectedIndex > index) {
-                        newSelectedPrompts.add(selectedIndex - 1);
+                        newSelectedPromptsAfterOptimisticDelete.add(selectedIndex - 1);
                     } else if (selectedIndex < index) {
-                        newSelectedPrompts.add(selectedIndex);
+                        newSelectedPromptsAfterOptimisticDelete.add(selectedIndex);
                     }
-                    // If selectedIndex === index, it's removed, so not added to newSelectedPrompts
+                    // If selectedIndex === index (the deleted prompt), it's not added to the new set.
                 });
-                selectedPrompts = newSelectedPrompts;
+                selectedPrompts = newSelectedPromptsAfterOptimisticDelete;
+
+                // Update UI immediately for responsiveness (will be reverted if sync fails)
+                updatePromptList();
 
                 chrome.storage.sync.set({ prompts: prompts }, function() {
                     if (chrome.runtime.lastError) {
-                        console.error("Error deleting prompt:", chrome.runtime.lastError);
-                        showNotification('Error deleting prompt.', 'error');
-                        // Revert prompts and selectedPrompts if save fails
-                        prompts.splice(index, 0, prompts[index]); // This is an approximation, need original prompt
-                        selectedPrompts = oldSelectedPrompts; // Revert selected set
-                        updatePromptList(); // Re-render to old state
+                        console.error("Error deleting prompt from sync:", chrome.runtime.lastError.message);
+                        showNotification('Error deleting prompt. Reverting changes.', 'error');
+
+                        // Revert local changes: reinsert the prompt and restore selection state
+                        prompts.splice(index, 0, promptToDelete); // Correctly reinsert the original prompt
+                        selectedPrompts = oldSelectedPrompts;    // Revert selectedPrompts to its state before this attempt
+
+                        updatePromptList(); // Re-render to reflect the reverted state
                     } else {
-                        updatePromptList(); // This will re-render checkboxes based on new selectedPrompts
-                        showNotification('Prompt deleted.', 'success');
+                        // Data saved successfully, UI is already up-to-date from optimistic update
+                        showNotification('Prompt deleted successfully.', 'success');
+                        // updatePromptList(); // Already called optimistically, but calling again ensures consistency if needed
+                                           // or if some part of updatePromptList depends on successful save.
+                                           // For now, the optimistic update should be sufficient.
                     }
                 });
             }
