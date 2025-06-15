@@ -5,7 +5,12 @@ console.log("AI Prompt Manager: Claude content script loaded");
 const DEFAULT_CLAUDE_INPUT_SELECTOR = 'div.ProseMirror[contenteditable="true"]';
 let CLAUDE_INPUT_SELECTOR = DEFAULT_CLAUDE_INPUT_SELECTOR; // Initialize with default
 
-// Helper function to validate CSS selectors
+/**
+ * Determines whether a given string is a valid CSS selector.
+ *
+ * @param {string} selector - The CSS selector string to validate.
+ * @returns {boolean} `true` if {@link selector} is a valid CSS selector, otherwise `false`.
+ */
 function isValidSelector(selector) {
     if (typeof selector !== 'string' || selector.trim() === '') {
         return false;
@@ -18,7 +23,13 @@ function isValidSelector(selector) {
     }
 }
 
-// Function to load selectors from storage for Claude
+/**
+ * Loads the Claude input field selector from Chrome storage, updating the global selector if a valid user-defined value is found.
+ *
+ * If no valid user-defined selector is present, the default selector is used.
+ *
+ * @returns {Promise<void>} Resolves when the selector has been loaded and set.
+ */
 function loadClaudeSelectors() {
     return new Promise((resolve) => {
         // Reset to default before loading, in case this function is called multiple times (though currently not)
@@ -44,6 +55,11 @@ function loadClaudeSelectors() {
     });
 }
 
+/**
+ * Initializes the Claude content script by loading the appropriate input field selector.
+ *
+ * Awaits loading of user-defined or default selectors before performing further initialization steps.
+ */
 async function initializeClaudeScript() {
     await loadClaudeSelectors();
     // Any other initialization steps that depend on selectors can go here.
