@@ -1,0 +1,165 @@
+/* styles_options.css */
+:root {
+    --primary-color: #007bff;
+    --secondary-color: #6c757d;
+    --background-color: #f4f7f6; /* Slightly different background for a page */
+    --text-color: #333333;
+    --border-color: #ced4da;
+    --input-bg-color: #ffffff;
+    --success-color: #28a745;
+    --warning-color: #ffc107;
+    --error-color: #dc3545;
+    --info-color: #17a2b8;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+.container {
+    width: 80%;
+    max-width: 800px; /* Max width for the options page content */
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+h1 {
+    font-size: 28px;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+h2 {
+    font-size: 22px;
+    color: var(--secondary-color);
+    margin-top: 30px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 5px;
+}
+
+.options-section {
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.form-group input[type="text"] {
+    width: calc(100% - 22px); /* Full width minus padding and border */
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 14px;
+    background-color: var(--input-bg-color);
+    color: var(--text-color);
+}
+
+.form-group input[type="text"]:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+}
+
+.action-buttons {
+    margin-top: 30px;
+    display: flex;
+    justify-content: flex-start; /* Align to left, or use 'center' or 'flex-end' */
+    gap: 15px; /* Space between buttons */
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    text-align: center;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.btn-secondary {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #545b62;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.status-message {
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 14px;
+    display: none; /* Hidden by default, shown by JS */
+}
+
+.status-message.success {
+    background-color: var(--success-color);
+    color: white;
+    display: block;
+}
+
+.status-message.error {
+    background-color: var(--error-color);
+    color: white;
+    display: block;
+}
+
+.status-message.info {
+    background-color: var(--info-color);
+    color: white;
+    display: block;
+}
+
+/* Dark mode considerations (optional for now, but good to keep in mind) */
+/*
+body.dark-mode {
+    --background-color: #333333;
+    --text-color: #ffffff;
+    --border-color: #555555;
+    --input-bg-color: #444444;
+}
+body.dark-mode .container {
+    background-color: #2c2c2c;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+}
+body.dark-mode .options-section {
+    background-color: #3a3a3a;
+    border-color: #4a4a4a;
+}
+*/

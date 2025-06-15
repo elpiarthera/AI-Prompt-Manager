@@ -11,9 +11,11 @@ This extension provides features like an overlay for ChatGPT, clipboard integrat
 - **Dark Mode:** Enjoy a comfortable viewing experience with dark mode for the popup interface.
 - **Copy ChatGPT Conversation:** Easily copy the entire ChatGPT conversation to your clipboard.
 - **Copy Last ChatGPT Answer:** Quickly copy the last response from ChatGPT.
-- **Send to Claude:** Send text or prompts to a new tab in `Claude.ai`.
+- **Send to Claude Tab:** Send text or prompts to a new tab in `Claude.ai`.
+- **Claude API Integration:** Send text directly to the Claude API (requires configuration) and view the response within the ChatGPT overlay.
 - **ChatGPT Overlay:** Access quick actions and manage prompts via an overlay directly on ChatGPT pages.
 - **Prompt Count:** Keep track of your saved prompts with a readily visible count.
+- **Configurable Selectors:** Advanced users can customize CSS selectors via the Options page to adapt to website updates.
 
 ## Installation
 
@@ -71,11 +73,36 @@ When you are on a ChatGPT page (`https://chat.openai.com/*`), an overlay menu ma
 -   **Copy Full Conversation:** Click this button to copy the entire visible conversation from ChatGPT to your clipboard.
 -   **Copy Last Answer:** Click this button to copy only the last response from ChatGPT to your clipboard.
 -   **Send to Claude Tab:** This option will take the current text (e.g., from the ChatGPT input or a selected part of the conversation) and open a new tab for `Claude.ai`, pasting the text there.
--   **Send to Claude API:** This feature allows sending text directly to the Claude API (Note: This may require separate API key configuration not covered here).
+-   **Send to Claude API:** This feature allows sending text (e.g., the last answer from ChatGPT, or custom text from the overlay's input) directly to the Claude API. The API's response will then be displayed within the overlay.
+    *   **Note:** This feature requires a valid Claude API key to be configured in the extension's Options page.
 
 ### Interacting with Claude
 
 -   **Send to Claude Tab:** As mentioned above, this feature (available from the ChatGPT overlay or potentially within the popup) will open `https://claude.ai/new` and paste the selected or active text content into the message box on `Claude.ai`. This is useful for quickly transferring ideas or prompts between the two AI platforms.
+
+## Configuration (Options Page)
+
+You can customize the extension's behavior through the Options page.
+
+### Accessing the Options Page
+
+1.  Click on the AI Prompt Manager extension icon in your Chrome toolbar to open the popup.
+2.  In the footer of the popup, click the "Options" button.
+3.  The Options page will open in a new tab.
+
+### Available Settings
+
+-   **CSS Selectors (for ChatGPT and Claude.ai):**
+    *   The extension uses CSS selectors to identify elements on ChatGPT and Claude.ai pages (like input fields, buttons, and message containers).
+    *   Default selectors that work with current website versions are provided.
+    *   If ChatGPT or Claude.ai updates its website structure, these default selectors might stop working, potentially breaking some extension features (e.g., inserting prompts, copying conversations).
+    *   Advanced users can update these selectors here to match the new website structure. Regular users will typically not need to change these unless instructed to, perhaps due to a site update.
+-   **Claude API Key:**
+    *   If you have access to the Claude API from Anthropic, you can enter your API key here.
+    *   This key enables the "Send to Claude API" feature in the ChatGPT overlay, allowing you to get direct responses from Claude models within the overlay.
+    *   The API key is stored using Chrome's synchronized storage. Please be mindful of using this feature on public or shared computers.
+
+Changes made on the Options page are saved by clicking the "Save Settings" button. You can revert to the extension's original default settings by clicking "Reset to Defaults".
 
 ## For Developers
 
