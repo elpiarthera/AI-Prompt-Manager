@@ -34,7 +34,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Update prompt list
+    /**
+     * Renders the list of saved prompts in the popup UI, updating checkboxes, labels, and action buttons for each prompt.
+     *
+     * Displays a placeholder message if no prompts exist. Ensures the prompt count and the "Add Selected Prompts" button state are updated to reflect the current selection and prompt list.
+     */
     function updatePromptList() {
         promptList.innerHTML = ''; // Clear existing items
 
@@ -92,7 +96,15 @@ document.addEventListener('DOMContentLoaded', function() {
         updateAddSelectedPromptsButton();
     }
 
-    // Modal display functions
+    /**
+     * Displays the modal dialog for adding or editing a prompt.
+     *
+     * @param {string} title - The title to display at the top of the modal.
+     * @param {Object} [prompt={}] - Optional prompt data to pre-fill the modal fields.
+     * @param {string} [prompt.title] - The prompt's title to pre-fill.
+     * @param {string} [prompt.text] - The prompt's text to pre-fill.
+     * @param {Function} callback - Function to call when the user saves the modal.
+     */
     function showModal(title, prompt = {}, callback) {
         modalTitle.textContent = title;
         promptTitleInput.value = prompt.title || '';
@@ -102,6 +114,9 @@ document.addEventListener('DOMContentLoaded', function() {
         promptTitleInput.focus();
     }
 
+    /**
+     * Hides the prompt modal dialog and clears its input fields and callback.
+     */
     function hideModal() {
         modal.style.display = 'none';
         promptTitleInput.value = '';
@@ -109,7 +124,9 @@ document.addEventListener('DOMContentLoaded', function() {
         currentModalCallback = null;
     }
 
-    // Update prompt count
+    /**
+     * Updates the displayed count of saved prompts in the UI.
+     */
     function updatePromptCount() {
         const count = prompts.length;
         promptCount.textContent = `You have ${count} saved prompt${count !== 1 ? 's' : ''}.`;
@@ -308,7 +325,15 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Show notification
+    /**
+     * Displays a notification message in the popup with a fade-out effect.
+     *
+     * @param {string} message - The notification text to display.
+     * @param {string} [type='info'] - The notification type, used for styling (e.g., 'info', 'success', 'error', 'warning').
+     *
+     * @remark
+     * Notifications appear in a dedicated area at the top-right of the popup and automatically fade out after a short delay.
+     */
     function showNotification(message, type = 'info') {
         const notificationArea = document.getElementById('notificationArea') || createNotificationArea();
         const notificationDiv = document.createElement('div');
@@ -334,6 +359,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 3000); // Start hiding after 3 seconds
     }
 
+    /**
+     * Ensures a notification area container exists in the DOM and returns it.
+     *
+     * @returns {HTMLElement} The notification area container element.
+     *
+     * @remark
+     * If the container does not exist, it is created, styled, and appended to the document body.
+     */
     function createNotificationArea() {
         let area = document.getElementById('notificationArea');
         if (!area) {

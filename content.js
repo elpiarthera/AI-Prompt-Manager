@@ -13,7 +13,12 @@ const DEFAULT_CHATGPT_SELECTORS = {
 };
 let CHATGPT_SELECTORS = { ...DEFAULT_CHATGPT_SELECTORS }; // Initialize with defaults
 
-// Helper function to validate CSS selectors
+/**
+ * Determines whether a given string is a valid CSS selector.
+ *
+ * @param {string} selector - The CSS selector string to validate.
+ * @returns {boolean} True if {@link selector} is a valid CSS selector; otherwise, false.
+ */
 function isValidSelector(selector) {
     if (typeof selector !== 'string' || selector.trim() === '') {
         return false;
@@ -26,7 +31,13 @@ function isValidSelector(selector) {
     }
 }
 
-// Function to load selectors from storage
+/**
+ * Loads user-defined CSS selectors for ChatGPT UI elements from Chrome storage and updates the global selector object.
+ *
+ * Resets selectors to defaults before applying any valid user-defined overrides. Invalid or missing user selectors are ignored in favor of defaults.
+ *
+ * @returns {Promise<void>} Resolves when selectors have been loaded and applied.
+ */
 function loadSelectors() {
     return new Promise((resolve) => {
         // Ensure CHATGPT_SELECTORS is reset to defaults before loading user-defined ones
@@ -57,7 +68,11 @@ function loadSelectors() {
     });
 }
 
-// --- Initialize Script ---
+/**
+ * Initializes the content script by loading selectors, injecting the overlay script, creating the overlay element, and setting up event listeners.
+ *
+ * @returns {Promise<void>} Resolves when initialization is complete.
+ */
 async function initialize() {
     await loadSelectors(); // Wait for selectors to be loaded
 
@@ -82,7 +97,11 @@ async function initialize() {
     // chrome.runtime.sendMessage({action: "contentScriptLoaded"}); // Can be uncommented if needed by background
 }
 
-// Function to find the input field
+/**
+ * Returns the ChatGPT input field element based on the current selector configuration.
+ *
+ * @returns {HTMLElement|null} The input field element if found; otherwise, {@code null}.
+ */
 function findInputField() {
     const element = document.querySelector(CHATGPT_SELECTORS.inputField);
     if (element) {
@@ -104,7 +123,11 @@ function insertTextIntoField(field, text) {
     field.focus();
 }
 
-// Function to find the submit button
+/**
+ * Returns the ChatGPT submit button element using the current selector configuration.
+ *
+ * @returns {Element|null} The submit button element if found; otherwise, {@code null}.
+ */
 function findSubmitButton() {
     const button = document.querySelector(CHATGPT_SELECTORS.submitButton);
     if (button) {
@@ -115,7 +138,14 @@ function findSubmitButton() {
     return null;
 }
 
-// Function to insert prompt and submit
+/**
+ * Inserts a prompt into the ChatGPT input field and submits it.
+ *
+ * If the submit button is available and enabled, it is clicked to submit the prompt. Otherwise, an Enter key press is simulated on the input field.
+ *
+ * @param {string} prompt - The prompt text to insert and submit.
+ * @throws {Error} If the input field cannot be found in the DOM.
+ */
 async function insertAndSubmitPrompt(prompt) { // Made async if findInputField/Button become async due to retries
     const inputField = findInputField();
     if (!inputField) {
@@ -140,7 +170,13 @@ async function insertAndSubmitPrompt(prompt) { // Made async if findInputField/B
     }
 }
 
-// Function to extract the full conversation
+/**
+ * Extracts the entire conversation from the ChatGPT interface as a formatted string.
+ *
+ * Iterates through all detected message elements, retrieving the role and content for each, and concatenates them into a readable transcript separated by double newlines.
+ *
+ * @returns {string} The full conversation with each message formatted as "role: content".
+ */
 function extractConversation() {
     // CHATGPT_SELECTORS.conversationContainer might point to the direct parent of messages or a higher ancestor.
     // CHATGPT_SELECTORS.messageElement should identify individual message blocks.
@@ -161,7 +197,13 @@ function extractConversation() {
     return conversation;
 }
 
-// Function to extract the last ChatGPT answer
+/**
+ * Extracts the content of the last AI-generated answer in the current ChatGPT conversation.
+ *
+ * Returns the text of the most recent message whose role is identified as "assistant" or "chatgpt" (case-insensitive), or an empty string if no such message is found.
+ *
+ * @returns {string} The last AI answer's text, or an empty string if unavailable.
+ */
 function extractLastAnswer() {
     const messageElements = document.querySelectorAll(CHATGPT_SELECTORS.messageElement);
     if (messageElements.length === 0) return '';
@@ -181,6 +223,13 @@ function extractLastAnswer() {
 }
 
 
+/**
+ * Attaches event listeners to the overlay element for handling custom AI bridge events.
+ *
+ * Sets up handlers for copying the conversation or last answer to the clipboard, and for sending text to Claude via a browser tab or API. Displays notifications on the overlay to indicate success or failure of each action.
+ *
+ * @param {HTMLElement} overlay - The overlay element to which event listeners are attached.
+ */
 function setupOverlayEventListeners(overlay) {
     overlay.addEventListener('aibridge-copy-conversation', () => {
         const conversation = extractConversation();

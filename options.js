@@ -38,6 +38,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    /**
+     * Loads user-configured selectors and the Claude API key from Chrome storage and populates the corresponding input fields with stored or default values.
+     *
+     * @remark The status message indicating options loading is shown before both asynchronous storage retrievals complete.
+     */
     function loadOptions() {
         // Load selectors from sync storage
         chrome.storage.sync.get('userSelectors', (syncData) => {
@@ -69,6 +74,11 @@ document.addEventListener('DOMContentLoaded', () => {
         displayStatus("Options loading initiated.", "info");
     }
 
+    /**
+     * Saves the current ChatGPT and Claude selector values and the Claude API key to Chrome storage.
+     *
+     * Collects trimmed selector values from input fields and stores them in Chrome's sync storage, while the Claude API key is saved to local storage. Displays a status message indicating success or any encountered error after both save operations complete.
+     */
     function saveOptions() {
         let saveError = null;
         let selectorsSaved = false;
@@ -107,6 +117,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    /**
+     * Resets all selector input fields to their default values and clears the Claude API key, then saves these defaults.
+     */
     function resetToDefaults() {
         // Populate ChatGPT fields with defaults
         for (const key in defaultSelectors.chatGPT) {
@@ -129,6 +142,15 @@ document.addEventListener('DOMContentLoaded', () => {
         saveOptions(); // Save these defaults (including cleared API key)
     }
 
+    /**
+     * Displays a temporary status message in the status area with a style based on the message type.
+     *
+     * @param {string} message - The message to display to the user.
+     * @param {string} [type="info"] - The type of message, which determines the CSS class applied (e.g., "info", "success", "error").
+     *
+     * @remark
+     * The message is automatically cleared after 3 seconds.
+     */
     function displayStatus(message, type = "info") {
         statusArea.textContent = message;
         statusArea.className = `status-message ${type}`; // Ensure CSS handles .info, .success, .error
